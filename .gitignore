@@ -1,8 +1,33 @@
 .env
 env*
-__pycache__/
+*.pyc
 venv
+tests/
 
-tests
+__pycache__/
+*.py[cod]
+
 # .txt
 
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
