@@ -22,12 +22,35 @@ def load_llm(model_name=None):
         _model.eval()
     return _tokenizer, _model
 
-def llm_summarize(code: str, max_new_tokens: int = 150) -> str:
-    tokenizer, model = load_llm()
-    prompt = f"\"\"\"\n{code}\n\"\"\"\n# Explain in simple terms what this code does:\n"
-    inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=2048).to(model.device)
+def llm_summarize(code: str, query: str, max_new_tokens: int = 150) -> str:
+    tokenizer, model = load_llm()  
+    
+
+    prompt = f"""
+You are a code analysis assistant.
+Question: {query}
+Code:
+{code}
+
+Rules:
+1. Only answer the question.
+2. Do not repeat the code.
+3. If counting lines, return only a number, e.g. 3. 
+"""
+
+    inputs = tokenizer(
+        prompt, return_tensors="pt", truncation=True, max_length=2048
+    ).to(model.device)
+
     with torch.no_grad():
-        out = model.generate(**inputs, max_new_tokens=max_new_tokens, temperature=0.2, do_sample=False)
+        out = model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            temperature=0.2,
+            do_sample=False
+        )
+
     summary = tokenizer.decode(out[0], skip_special_tokens=True)
+
     # Trim to the part after the prompt
     return summary.replace(prompt, "").strip()

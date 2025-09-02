@@ -50,7 +50,7 @@ def answer_query(query: NLQuery):
         code = snip["code"]
         # call LLM summarizer (lazy-loaded)
         try:
-            explanation = llm_summarize(code)
+            explanation = llm_summarize(code,query.question)
         except Exception as e:
             explanation = f"Could not summarize (LLM error): {e}"
         results.append({"filename": snip["filename"], "code": code, "explanation": explanation})
